@@ -5,14 +5,22 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class RotateItemAnimator extends DefaultItemAnimator {
+
+    public static final int DURATION = 200; // (毫秒)动画效果持续时间
+
+    public static final int PADDING = 12; // (dp) 横向转动时 item 之间的距离
+
+    private static int TRANSLATION_X = 50; // (dp)旋转时需要调整的距离
 
     private Map<RecyclerView.ViewHolder, AnimatorSet> likeAnimationsMap = new HashMap<>();
 
@@ -68,7 +76,9 @@ public class RotateItemAnimator extends DefaultItemAnimator {
 
     private void animate(final RecyclerView.ViewHolder holder) {
 
-        ValueAnimator animatorPadding = ValueAnimator.ofInt(0, 30);
+        int padding = DpUtils.dp2px(holder.itemView.getContext(), PADDING);
+
+        ValueAnimator animatorPadding = ValueAnimator.ofInt(0, padding);
         animatorPadding.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -77,7 +87,7 @@ public class RotateItemAnimator extends DefaultItemAnimator {
             }
         });
 
-        ValueAnimator animatorCollapse = ValueAnimator.ofInt(30, 0);
+        ValueAnimator animatorCollapse = ValueAnimator.ofInt(padding, 0);
         animatorCollapse.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -90,7 +100,7 @@ public class RotateItemAnimator extends DefaultItemAnimator {
         ObjectAnimator animRotate = ObjectAnimator.ofFloat(holder.itemView, "rotation", mStartAngle, mEndAngle);
         ObjectAnimator animX = ObjectAnimator.ofFloat(holder.itemView, "translationX", mTranslationX);
         AnimatorSet set = new AnimatorSet();
-        set.setDuration(300);
+        set.setDuration(DURATION);
         if (mTranslationX != 0) {
             set.play(animRotate).with(animX).with(animatorPadding);
         } else {

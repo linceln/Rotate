@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
 import android.view.View;
@@ -36,11 +37,11 @@ public class MainActivity extends AppCompatActivity {
         mList.add("时间静止");
     }
 
-    private static float TRANSLATION_X = 50f; // (dp)旋转时需要调整的距离
+    private static int TRANSLATION_X = 50; // (dp)旋转时需要调整的距离
 
-    private float mCurrentAngle; // 记录当前所在的角度
+    private float mCurrentAngle; // 记录当前所在的角度(0, 90, 180, -90)
 
-    private int mOrientation; // 旋转监听记录的当前角度
+    private int mOrientation; // 记录的当前角度(0, 90, 180, 270)
 
     private OrientationEventListener mOrientationEventListener;
 
@@ -94,41 +95,41 @@ public class MainActivity extends AppCompatActivity {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_test, parent, false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_test,
+                        parent, false);
                 return new RecyclerView.ViewHolder(view) {
                 };
             }
 
             @Override
             public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
-                if (holder.itemView == null) {
-                    return;
-                }
+                Log.e("rotate", "onBindViewHolder: " + position);
                 TextView tv = holder.itemView.findViewById(R.id.textView);
                 tv.setText(mList.get(position));
                 holder.itemView.post(new Runnable() {
                     @Override
                     public void run() {
+                        int padding = DpUtils.dp2px(MainActivity.this, RotateItemAnimator.PADDING);
                         if (mOrientation == 0) {
                             // 0度
+                            holder.itemView.setPadding(0, 0, 0, 0);
                             holder.itemView.setRotation(0f);
                             holder.itemView.setTranslationX(0f);
-                            holder.itemView.setPadding(0,0,0,0);
                         } else if (mOrientation == 90) {
                             // 90度
+                            holder.itemView.setPadding(padding, 0, padding, 0);
                             holder.itemView.setRotation(-90f);
                             holder.itemView.setTranslationX(-TRANSLATION_X);
-                            holder.itemView.setPadding(30,0,30,0);
                         } else if (mOrientation == 180) {
                             // 180度
+                            holder.itemView.setPadding(0, 0, 0, 0);
                             holder.itemView.setRotation(180f);
                             holder.itemView.setTranslationX(0f);
-                            holder.itemView.setPadding(0,0,0,0);
                         } else if (mOrientation == 270) {
                             // 270度
+                            holder.itemView.setPadding(padding, 0, padding, 0);
                             holder.itemView.setRotation(90f);
                             holder.itemView.setTranslationX(TRANSLATION_X);
-                            holder.itemView.setPadding(30,0,30,0);
                         }
                     }
                 });
