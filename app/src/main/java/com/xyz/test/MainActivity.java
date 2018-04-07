@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView.Adapter mAdapter;
 
-    private DefaultItemAnimator mAnimator;
+    private RotationItemAnimator mAnimator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,18 +102,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
-                holder.itemView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        mAdapter.notifyItemRangeChanged(0, mList.size());
-                    }
-                });
+
                 TextView tv = holder.itemView.findViewById(R.id.textView);
                 tv.setText(mList.get(position));
+
                 holder.itemView.post(new Runnable() {
                     @Override
                     public void run() {
-                        int padding = DpUtils.dp2px(MainActivity.this, RotateItemAnimator.PADDING);
+                        int padding = DpUtils.dp2px(MainActivity.this, RotationItemAnimator.PADDING);
                         if (mOrientation == 0) {
                             // 0度
                             holder.itemView.setPadding(0, 0, 0, 0);
@@ -146,7 +142,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        mAnimator = new DefaultItemAnimator();
+        mAnimator = new RotationItemAnimator();
         recyclerView.setItemAnimator(mAnimator);
         LinearLayoutManager layout = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
         recyclerView.setLayoutManager(layout);
