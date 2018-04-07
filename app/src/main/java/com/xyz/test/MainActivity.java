@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.OrientationEventListener;
 import android.view.View;
@@ -60,29 +59,29 @@ public class MainActivity extends AppCompatActivity {
             public void onOrientationChanged(int orientation) {
                 if ((orientation > 350 || orientation < 10) && mOrientation != 0) {
                     // 0度
-//                    mAnimator.setAngle(mCurrentAngle, 0f);
-//                    mAnimator.setX(0f);
+                    mAnimator.setAngle(mCurrentAngle, 0f);
+                    mAnimator.setX(0f);
                     mAdapter.notifyItemRangeChanged(0, mList.size());
                     mOrientation = 0;
                     mCurrentAngle = 0;
                 } else if ((orientation > 80 && orientation < 100) && mOrientation != 90) {
                     // 90度
-//                    mAnimator.setAngle(mCurrentAngle, -90f);
-//                    mAnimator.setX(-TRANSLATION_X);
+                    mAnimator.setAngle(mCurrentAngle, -90f);
+                    mAnimator.setX(-TRANSLATION_X);
                     mAdapter.notifyItemRangeChanged(0, mList.size());
                     mOrientation = 90;
                     mCurrentAngle = -90;
                 } else if ((orientation > 170 && orientation < 190) && mOrientation != 180) {
                     // 180度
-//                    mAnimator.setAngle(mCurrentAngle, 180f);
-//                    mAnimator.setX(0f);
+                    mAnimator.setAngle(mCurrentAngle, 180f);
+                    mAnimator.setX(0f);
                     mAdapter.notifyItemRangeChanged(0, mList.size());
                     mOrientation = 180;
                     mCurrentAngle = 180;
                 } else if ((orientation > 260 && orientation < 280) && mOrientation != 270) {
                     // 270度
-//                    mAnimator.setAngle(mCurrentAngle, 90f);
-//                    mAnimator.setX(TRANSLATION_X);
+                    mAnimator.setAngle(mCurrentAngle, 90f);
+                    mAnimator.setX(TRANSLATION_X);
                     mAdapter.notifyItemRangeChanged(0, mList.size());
                     mOrientation = 270;
                     mCurrentAngle = 90;
@@ -103,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
-                Log.e("rotate", "onBindViewHolder: " + position);
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

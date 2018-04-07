@@ -50,6 +50,32 @@ public class DefaultItemAnimator extends SimpleItemAnimator {
     ArrayList<ViewHolder> mRemoveAnimations = new ArrayList<>();
     ArrayList<ViewHolder> mChangeAnimations = new ArrayList<>();
 
+    private float mStartAngle;
+
+    private float mEndAngle;
+
+    private float mTranslationX;
+
+    /**
+     * 设置旋转动画的角度
+     *
+     * @param mStartAngle 起始角度
+     * @param mEndAngle   结束角度
+     */
+    public void setAngle(float mStartAngle, float mEndAngle) {
+        this.mStartAngle = mStartAngle;
+        this.mEndAngle = mEndAngle;
+    }
+
+    /**
+     * 设置 X 轴平移动画的距离
+     *
+     * @param mTranslationX 距离
+     */
+    public void setX(float mTranslationX) {
+        this.mTranslationX = mTranslationX;
+    }
+
     private static class MoveInfo {
         public ViewHolder holder;
         public int fromX, fromY, toX, toY;
@@ -351,7 +377,7 @@ public class DefaultItemAnimator extends SimpleItemAnimator {
 //                    getChangeDuration());
             mChangeAnimations.add(changeInfo.oldHolder);
 //            view.setAlpha(0);
-            runAnimatorSet(view, changeInfo.oldHolder, -90, -50);
+            runAnimatorSet(view, changeInfo.oldHolder);
 //            oldViewAnim.translationX(changeInfo.toX - changeInfo.fromX);
 //            oldViewAnim.translationY(changeInfo.toY - changeInfo.fromY);
 //            oldViewAnim.alpha(0).rotation(90).setListener(new AnimatorListenerAdapter() {
@@ -375,7 +401,7 @@ public class DefaultItemAnimator extends SimpleItemAnimator {
         if (newView != null) {
 //            final ViewPropertyAnimator newViewAnimation = newView.animate();
             mChangeAnimations.add(changeInfo.newHolder);
-            runAnimatorSet(newView, changeInfo.newHolder, -90, -50);
+            runAnimatorSet(newView, changeInfo.newHolder);
 //            newViewAnimation.translationX(0).translationY(0).setDuration(getChangeDuration())
 //                    .alpha(1).rotation(90).setListener(new AnimatorListenerAdapter() {
 //                @Override
@@ -668,7 +694,7 @@ public class DefaultItemAnimator extends SimpleItemAnimator {
     }
 
     @NonNull
-    private AnimatorSet runAnimatorSet(final View view, final ViewHolder viewHolder, float angle, float translationX) {
+    private void runAnimatorSet(final View view, final ViewHolder viewHolder) {
         int padding = DpUtils.dp2px(view.getContext(), 12);
 
         ValueAnimator animatorPadding = ValueAnimator.ofInt(0, padding);
@@ -689,13 +715,12 @@ public class DefaultItemAnimator extends SimpleItemAnimator {
             }
         });
 
-
-        ObjectAnimator animRotate = ObjectAnimator.ofFloat(view, "rotation", angle);
-        ObjectAnimator animX = ObjectAnimator.ofFloat(view, "translationX", translationX);
+        ObjectAnimator animRotate = ObjectAnimator.ofFloat(view, "rotation", mStartAngle, mEndAngle);
+        ObjectAnimator animX = ObjectAnimator.ofFloat(view, "translationX", mTranslationX);
 
         final AnimatorSet set = new AnimatorSet();
         set.setDuration(300);
-        if (translationX != 0) {
+        if (mTranslationX != 0) {
             set.play(animRotate).with(animX).with(animatorPadding);
         } else {
             set.play(animRotate).with(animX).with(animatorCollapse);
@@ -718,7 +743,6 @@ public class DefaultItemAnimator extends SimpleItemAnimator {
             }
         });
         set.start();
-        return set;
     }
 }
 
