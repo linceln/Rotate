@@ -36,9 +36,7 @@ public class MainActivity extends AppCompatActivity {
         mList.add("时间静止");
     }
 
-    private float mCurrentAngle; // 记录当前所在的角度(0, 90, 180, -90)
-
-    private int mOrientation; // 记录的当前角度(0, 90, 180, 270)
+    private float mCurrentOrientation; // 记录当前所在的角度(0, 90, 180, -90)
 
     private OrientationEventListener mOrientationEventListener;
 
@@ -55,34 +53,30 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onOrientationChanged(int orientation) {
-                if ((orientation > 350 || orientation < 10) && mOrientation != 0) {
+                if ((orientation > 350 || orientation < 10) && mCurrentOrientation != 0f) {
                     // 0度
-                    mAnimator.setAngle(mCurrentAngle, 0f);
+                    mAnimator.setAngle(mCurrentOrientation, 0f);
                     mAnimator.setX(0f);
                     mAdapter.notifyItemRangeChanged(0, mList.size());
-                    mOrientation = 0;
-                    mCurrentAngle = 0;
-                } else if ((orientation > 80 && orientation < 100) && mOrientation != 90) {
+                    mCurrentOrientation = 0f;
+                } else if ((orientation > 80 && orientation < 100) && mCurrentOrientation != -90f) {
                     // 90度
-                    mOrientation = 90;
-                    mAnimator.setAngle(mCurrentAngle, -mOrientation);
+                    mAnimator.setAngle(mCurrentOrientation, -90f);
                     mAnimator.setX(-RotationItemAnimator.TRANSLATION_X);
                     mAdapter.notifyItemRangeChanged(0, mList.size());
-                    mCurrentAngle = -90;
-                } else if ((orientation > 170 && orientation < 190) && mOrientation != 180) {
+                    mCurrentOrientation = -90f;
+                } else if ((orientation > 170 && orientation < 190) && mCurrentOrientation != 180f) {
                     // 180度
-                    mOrientation = 180;
-                    mAnimator.setAngle(mCurrentAngle, mOrientation);
+                    mAnimator.setAngle(mCurrentOrientation, 180f);
                     mAnimator.setX(0f);
                     mAdapter.notifyItemRangeChanged(0, mList.size());
-                    mCurrentAngle = 180;
-                } else if ((orientation > 260 && orientation < 280) && mOrientation != 270) {
+                    mCurrentOrientation = 180f;
+                } else if ((orientation > 260 && orientation < 280) && mCurrentOrientation != 90f) {
                     // 270度
-                    mOrientation = 270;
-                    mAnimator.setAngle(mCurrentAngle, 360f - mOrientation);
+                    mAnimator.setAngle(mCurrentOrientation, 90f);
                     mAnimator.setX(RotationItemAnimator.TRANSLATION_X);
                     mAdapter.notifyItemRangeChanged(0, mList.size());
-                    mCurrentAngle = 90;
+                    mCurrentOrientation = 90f;
                 }
             }
         };
@@ -107,22 +101,22 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         int padding = DpUtils.dp2px(MainActivity.this, RotationItemAnimator.PADDING);
-                        if (mOrientation == 0) {
+                        if (mCurrentOrientation == 0f) {
                             // 0度
                             holder.itemView.setPadding(0, 0, 0, 0);
                             holder.itemView.setRotation(0f);
                             holder.itemView.setTranslationX(0f);
-                        } else if (mOrientation == 90) {
+                        } else if (mCurrentOrientation == -90) {
                             // 90度
                             holder.itemView.setPadding(padding, 0, padding, 0);
                             holder.itemView.setRotation(-90f);
                             holder.itemView.setTranslationX(-RotationItemAnimator.TRANSLATION_X);
-                        } else if (mOrientation == 180) {
+                        } else if (mCurrentOrientation == 180f) {
                              // 180度
                             holder.itemView.setPadding(0, 0, 0, 0);
                             holder.itemView.setRotation(180f);
                             holder.itemView.setTranslationX(0f);
-                        } else if (mOrientation == 270) {
+                        } else if (mCurrentOrientation == 90f) {
                             // 270度
                             holder.itemView.setPadding(padding, 0, padding, 0);
                             holder.itemView.setRotation(90f);
