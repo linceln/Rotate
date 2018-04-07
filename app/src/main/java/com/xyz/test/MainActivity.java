@@ -97,33 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 TextView tv = holder.itemView.findViewById(R.id.textView);
                 tv.setText(mList.get(position));
 
-                holder.itemView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        int padding = DpUtils.dp2px(MainActivity.this, RotationItemAnimator.PADDING);
-                        if (mCurrentOrientation == 0f) {
-                            // 0度
-                            holder.itemView.setPadding(0, 0, 0, 0);
-                            holder.itemView.setRotation(0f);
-                            holder.itemView.setTranslationX(0f);
-                        } else if (mCurrentOrientation == -90) {
-                            // 90度
-                            holder.itemView.setPadding(padding, 0, padding, 0);
-                            holder.itemView.setRotation(-90f);
-                            holder.itemView.setTranslationX(-RotationItemAnimator.TRANSLATION_X);
-                        } else if (mCurrentOrientation == 180f) {
-                             // 180度
-                            holder.itemView.setPadding(0, 0, 0, 0);
-                            holder.itemView.setRotation(180f);
-                            holder.itemView.setTranslationX(0f);
-                        } else if (mCurrentOrientation == 90f) {
-                            // 270度
-                            holder.itemView.setPadding(padding, 0, padding, 0);
-                            holder.itemView.setRotation(90f);
-                            holder.itemView.setTranslationX(RotationItemAnimator.TRANSLATION_X);
-                        }
-                    }
-                });
+                refreshItemView(holder);
             }
 
             @Override
@@ -137,6 +111,37 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setItemAnimator(mAnimator);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         recyclerView.setAdapter(mAdapter);
+    }
+
+    private void refreshItemView(@NonNull final RecyclerView.ViewHolder holder) {
+        holder.itemView.post(new Runnable() {
+            @Override
+            public void run() {
+                int padding = DpUtils.dp2px(MainActivity.this, RotationItemAnimator.PADDING);
+                int translationX = DpUtils.dp2px(MainActivity.this, RotationItemAnimator.TRANSLATION_X);
+                if (mCurrentOrientation == 0f) {
+                    // 0度
+                    holder.itemView.setPadding(0, 0, 0, 0);
+                    holder.itemView.setRotation(0f);
+                    holder.itemView.setTranslationX(0f);
+                } else if (mCurrentOrientation == -90) {
+                    // 90度
+                    holder.itemView.setPadding(padding, 0, padding, 0);
+                    holder.itemView.setRotation(-90f);
+                    holder.itemView.setTranslationX(-translationX);
+                } else if (mCurrentOrientation == 180f) {
+                    // 180度
+                    holder.itemView.setPadding(0, 0, 0, 0);
+                    holder.itemView.setRotation(180f);
+                    holder.itemView.setTranslationX(0f);
+                } else if (mCurrentOrientation == 90f) {
+                    // 270度
+                    holder.itemView.setPadding(padding, 0, padding, 0);
+                    holder.itemView.setRotation(90f);
+                    holder.itemView.setTranslationX(translationX);
+                }
+            }
+        });
     }
 
     @Override

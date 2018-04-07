@@ -13,7 +13,7 @@ public class RotationItemAnimator extends android.support.v7.widget.DefaultItemA
 
     public static final int PADDING = 12;   // (dp) 旋转时 item 之间的间距
 
-    public static int TRANSLATION_X = 50; // (dp) 旋转时需要调整的距离
+    public static int TRANSLATION_X = 20; // (dp) 旋转时需要平移的距离
 
     private float mStartAngle;
 
@@ -39,6 +39,9 @@ public class RotationItemAnimator extends android.support.v7.widget.DefaultItemA
      */
     public void setX(float mTranslationX) {
         this.mTranslationX = mTranslationX;
+    }
+
+    public RotationItemAnimator(){
     }
 
     @Override
@@ -78,7 +81,9 @@ public class RotationItemAnimator extends android.support.v7.widget.DefaultItemA
         });
 
         ObjectAnimator animRotate = ObjectAnimator.ofFloat(view, "rotation", mStartAngle, mEndAngle);
-        ObjectAnimator animX = ObjectAnimator.ofFloat(view, "translationX", mTranslationX);
+
+        int translationXPX = DpUtils.dp2px(view.getContext(), mTranslationX);
+        ObjectAnimator animX = ObjectAnimator.ofFloat(view, "translationX", translationXPX);
 
         final AnimatorSet set = new AnimatorSet();
         set.setDuration(200);
