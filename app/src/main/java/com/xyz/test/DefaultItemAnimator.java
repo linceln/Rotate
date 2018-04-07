@@ -344,23 +344,25 @@ public class DefaultItemAnimator extends SimpleItemAnimator {
         if (oldHolder == newHolder) {
             // Don't know how to run change animations when the same view holder is re-used.
             // run a move animation to handle position changes.
-            return animateMove(oldHolder, fromX, fromY, toX, toY);
+            runAnimatorSet(newHolder.itemView, newHolder);
+            return true;
+//            return animateMove(oldHolder, fromX, fromY, toX, toY);
         }
-        final float prevTranslationX = oldHolder.itemView.getTranslationX();
-        final float prevTranslationY = oldHolder.itemView.getTranslationY();
-        final float prevAlpha = oldHolder.itemView.getAlpha();
+//        final float prevTranslationX = oldHolder.itemView.getTranslationX();
+//        final float prevTranslationY = oldHolder.itemView.getTranslationY();
+//        final float prevAlpha = oldHolder.itemView.getAlpha();
         resetAnimation(oldHolder);
-        int deltaX = (int) (toX - fromX - prevTranslationX);
-        int deltaY = (int) (toY - fromY - prevTranslationY);
+//        int deltaX = (int) (toX - fromX - prevTranslationX);
+//        int deltaY = (int) (toY - fromY - prevTranslationY);
         // recover prev translation state after ending animation
-        oldHolder.itemView.setTranslationX(prevTranslationX);
-        oldHolder.itemView.setTranslationY(prevTranslationY);
+//        oldHolder.itemView.setTranslationX(prevTranslationX);
+//        oldHolder.itemView.setTranslationY(prevTranslationY);
         oldHolder.itemView.setAlpha(0);
         if (newHolder != null) {
             // carry over translation values
             resetAnimation(newHolder);
-            newHolder.itemView.setTranslationX(-deltaX);
-            newHolder.itemView.setTranslationY(-deltaY);
+//            newHolder.itemView.setTranslationX(-deltaX);
+//            newHolder.itemView.setTranslationY(-deltaY);
             newHolder.itemView.setAlpha(1);
         }
         mPendingChanges.add(new ChangeInfo(oldHolder, newHolder, fromX, fromY, toX, toY));
@@ -380,7 +382,7 @@ public class DefaultItemAnimator extends SimpleItemAnimator {
             runAnimatorSet(view, changeInfo.oldHolder);
 //            oldViewAnim.translationX(changeInfo.toX - changeInfo.fromX);
 //            oldViewAnim.translationY(changeInfo.toY - changeInfo.fromY);
-//            oldViewAnim.alpha(0).rotation(90).setListener(new AnimatorListenerAdapter() {
+//            oldViewAnim.alpha(0).setListener(new AnimatorListenerAdapter() {
 //                @Override
 //                public void onAnimationStart(Animator animator) {
 //                    dispatchChangeStarting(changeInfo.oldHolder, true);
@@ -403,7 +405,7 @@ public class DefaultItemAnimator extends SimpleItemAnimator {
             mChangeAnimations.add(changeInfo.newHolder);
             runAnimatorSet(newView, changeInfo.newHolder);
 //            newViewAnimation.translationX(0).translationY(0).setDuration(getChangeDuration())
-//                    .alpha(1).rotation(90).setListener(new AnimatorListenerAdapter() {
+//                    .alpha(1).setListener(new AnimatorListenerAdapter() {
 //                @Override
 //                public void onAnimationStart(Animator animator) {
 //                    dispatchChangeStarting(changeInfo.newHolder, false);
@@ -690,7 +692,8 @@ public class DefaultItemAnimator extends SimpleItemAnimator {
     @Override
     public boolean canReuseUpdatedViewHolder(@NonNull ViewHolder viewHolder,
                                              @NonNull List<Object> payloads) {
-        return !payloads.isEmpty() || super.canReuseUpdatedViewHolder(viewHolder, payloads);
+//        return !payloads.isEmpty() || super.canReuseUpdatedViewHolder(viewHolder, payloads);
+        return true;
     }
 
     @NonNull
@@ -719,7 +722,7 @@ public class DefaultItemAnimator extends SimpleItemAnimator {
         ObjectAnimator animX = ObjectAnimator.ofFloat(view, "translationX", mTranslationX);
 
         final AnimatorSet set = new AnimatorSet();
-        set.setDuration(300);
+        set.setDuration(200);
         if (mTranslationX != 0) {
             set.play(animRotate).with(animX).with(animatorPadding);
         } else {
