@@ -36,8 +36,6 @@ public class MainActivity extends AppCompatActivity {
         mList.add("时间静止");
     }
 
-    private static int TRANSLATION_X = 50; // (dp)旋转时需要调整的距离
-
     private float mCurrentAngle; // 记录当前所在的角度(0, 90, 180, -90)
 
     private int mOrientation; // 记录的当前角度(0, 90, 180, 270)
@@ -66,24 +64,24 @@ public class MainActivity extends AppCompatActivity {
                     mCurrentAngle = 0;
                 } else if ((orientation > 80 && orientation < 100) && mOrientation != 90) {
                     // 90度
-                    mAnimator.setAngle(mCurrentAngle, -90f);
-                    mAnimator.setX(-TRANSLATION_X);
-                    mAdapter.notifyItemRangeChanged(0, mList.size());
                     mOrientation = 90;
+                    mAnimator.setAngle(mCurrentAngle, -mOrientation);
+                    mAnimator.setX(-RotationItemAnimator.TRANSLATION_X);
+                    mAdapter.notifyItemRangeChanged(0, mList.size());
                     mCurrentAngle = -90;
                 } else if ((orientation > 170 && orientation < 190) && mOrientation != 180) {
                     // 180度
-                    mAnimator.setAngle(mCurrentAngle, 180f);
+                    mOrientation = 180;
+                    mAnimator.setAngle(mCurrentAngle, mOrientation);
                     mAnimator.setX(0f);
                     mAdapter.notifyItemRangeChanged(0, mList.size());
-                    mOrientation = 180;
                     mCurrentAngle = 180;
                 } else if ((orientation > 260 && orientation < 280) && mOrientation != 270) {
                     // 270度
-                    mAnimator.setAngle(mCurrentAngle, 90f);
-                    mAnimator.setX(TRANSLATION_X);
-                    mAdapter.notifyItemRangeChanged(0, mList.size());
                     mOrientation = 270;
+                    mAnimator.setAngle(mCurrentAngle, 360f - mOrientation);
+                    mAnimator.setX(RotationItemAnimator.TRANSLATION_X);
+                    mAdapter.notifyItemRangeChanged(0, mList.size());
                     mCurrentAngle = 90;
                 }
             }
@@ -94,8 +92,7 @@ public class MainActivity extends AppCompatActivity {
             @NonNull
             @Override
             public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_test,
-                        parent, false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item_test, parent, false);
                 return new RecyclerView.ViewHolder(view) {
                 };
             }
@@ -119,9 +116,9 @@ public class MainActivity extends AppCompatActivity {
                             // 90度
                             holder.itemView.setPadding(padding, 0, padding, 0);
                             holder.itemView.setRotation(-90f);
-                            holder.itemView.setTranslationX(-TRANSLATION_X);
+                            holder.itemView.setTranslationX(-RotationItemAnimator.TRANSLATION_X);
                         } else if (mOrientation == 180) {
-                            // 180度
+                             // 180度
                             holder.itemView.setPadding(0, 0, 0, 0);
                             holder.itemView.setRotation(180f);
                             holder.itemView.setTranslationX(0f);
@@ -129,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
                             // 270度
                             holder.itemView.setPadding(padding, 0, padding, 0);
                             holder.itemView.setRotation(90f);
-                            holder.itemView.setTranslationX(TRANSLATION_X);
+                            holder.itemView.setTranslationX(RotationItemAnimator.TRANSLATION_X);
                         }
                     }
                 });
@@ -144,8 +141,7 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         mAnimator = new RotationItemAnimator();
         recyclerView.setItemAnimator(mAnimator);
-        LinearLayoutManager layout = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layout);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         recyclerView.setAdapter(mAdapter);
     }
 

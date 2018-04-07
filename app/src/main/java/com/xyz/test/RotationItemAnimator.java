@@ -13,6 +13,8 @@ public class RotationItemAnimator extends android.support.v7.widget.DefaultItemA
 
     public static final int PADDING = 12;   // (dp) 旋转时 item 之间的间距
 
+    public static int TRANSLATION_X = 50; // (dp) 旋转时需要调整的距离
+
     private float mStartAngle;
 
     private float mEndAngle;
