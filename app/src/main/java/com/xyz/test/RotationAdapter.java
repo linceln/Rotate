@@ -48,18 +48,20 @@ public class RotationAdapter extends RecyclerView.Adapter {
     }
 
     private void refreshItemView(@NonNull final RecyclerView.ViewHolder holder) {
+
         final Context context = holder.itemView.getContext();
+        final int padding = DpUtils.dp2px(context, RotationItemAnimator.PADDING);
+        final int translationX = DpUtils.dp2px(context, RotationItemAnimator.TRANSLATION_X);
+
         holder.itemView.post(new Runnable() {
             @Override
             public void run() {
-                int padding = DpUtils.dp2px(context, RotationItemAnimator.PADDING);
-                int translationX = DpUtils.dp2px(context, RotationItemAnimator.TRANSLATION_X);
                 if (mCurrentOrientation == 0f) {
                     // 0度
                     holder.itemView.setPadding(0, 0, 0, 0);
                     holder.itemView.setRotation(0f);
                     holder.itemView.setTranslationX(0f);
-                } else if (mCurrentOrientation == -90) {
+                } else if (mCurrentOrientation == -90f) {
                     // 90度
                     holder.itemView.setPadding(padding, 0, padding, 0);
                     holder.itemView.setRotation(-90f);

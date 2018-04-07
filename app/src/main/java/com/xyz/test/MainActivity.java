@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.OrientationEventListener;
 
 import java.util.ArrayList;
 
@@ -31,65 +30,24 @@ public class MainActivity extends AppCompatActivity {
         mList.add("时间静止");
     }
 
-    private float mCurrentOrientation; // 记录当前所在的角度(0, 90, 180, -90)
-
-    private OrientationEventListener mOrientationEventListener;
-
-    private RotationAdapter mAdapter;
-
-    private RotationItemAnimator mAnimator;
+    private CustomOrientationEventListener mOrientationEventListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mAnimator = new RotationItemAnimator();
-        mAdapter = new RotationAdapter(mList);
+        RotationItemAnimator itemAnimator = new RotationItemAnimator();
+        RotationAdapter adapter = new RotationAdapter(mList);
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
-        recyclerView.setItemAnimator(mAnimator);
-        recyclerView.setAdapter(mAdapter);
+        recyclerView.setItemAnimator(itemAnimator);
+        recyclerView.setAdapter(adapter);
 
-        mOrientationEventListener = new OrientationEventListener(this) {
-
-            @Override
-            public void onOrientationChanged(int orientation) {
-                if ((orientation > 350 || orientation < 10) && mCurrentOrientation != 0f) {
-                    // 0度
-                    mAnimator.setAngle(mCurrentOrientation, 0f);
-                    mAnimator.setX(0f);
-
-                    mAdapter.notifyItemRangeChanged(0, mList.size());
-                    mCurrentOrientation = 0f;
-                    mAdapter.setCurrentOrientation(mCurrentOrientation);
-                } else if ((orientation > 80 && orientation < 100) && mCurrentOrientation != -90f) {
-                    // 90度
-                    mAnimator.setAngle(mCurrentOrientation, -90f);
-                    mAnimator.setX(-RotationItemAnimator.TRANSLATION_X);
-
-                    mAdapter.notifyItemRangeChanged(0, mList.size());
-                    mCurrentOrientation = -90f;
-                    mAdapter.setCurrentOrientation(mCurrentOrientation);
-                } else if ((orientation > 170 && orientation < 190) && mCurrentOrientation != 180f) {
-                    // 180度
-                    mAnimator.setAngle(mCurrentOrientation, 180f);
-                    mAnimator.setX(0f);
-
-                    mAdapter.notifyItemRangeChanged(0, mList.size());
-                    mCurrentOrientation = 180f;
-                    mAdapter.setCurrentOrientation(mCurrentOrientation);
-                } else if ((orientation > 260 && orientation < 280) && mCurrentOrientation != 90f) {
-                    // 270度
-                    mAnimator.setAngle(mCurrentOrientation, 90f);
-                    mAnimator.setX(RotationItemAnimator.TRANSLATION_X);
-
-                    mAdapter.notifyItemRangeChanged(0, mList.size());
-                    mCurrentOrientation = 90f;
-                    mAdapter.setCurrentOrientation(mCurrentOrientation);
-                }
-            }
-        };
+        mOrientationEventListener = new CustomOrientationEventListener(this);
+        mOrientationEventListener.setRecyclerAdapter(adapter);
+        mOrientationEventListener.setRecyclerItemAnimator(itemAnimator);
+        mOrientationEventListener.setListSize(mList.size());
     }
 
     @Override
