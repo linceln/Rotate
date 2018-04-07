@@ -5,11 +5,10 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +21,7 @@ public class RotateItemAnimator extends DefaultItemAnimator {
 
     private static int TRANSLATION_X = 50; // (dp)旋转时需要调整的距离
 
-    private Map<RecyclerView.ViewHolder, AnimatorSet> likeAnimationsMap = new HashMap<>();
+    private Map<RecyclerView.ViewHolder, AnimatorSet> animatorMap = new HashMap<>();
 
     private float mStartAngle;
 
@@ -61,6 +60,9 @@ public class RotateItemAnimator extends DefaultItemAnimator {
                                  @NonNull ItemHolderInfo preInfo,
                                  @NonNull ItemHolderInfo postInfo) {
 
+        Log.e("rotate", "animateChange: new: " + newHolder.getAdapterPosition() + " old: " + oldHolder.getAdapterPosition());
+
+        cancelCurrentAnimationIfExists(oldHolder);
         cancelCurrentAnimationIfExists(newHolder);
 
         animate(newHolder);
@@ -69,13 +71,20 @@ public class RotateItemAnimator extends DefaultItemAnimator {
     }
 
     private void cancelCurrentAnimationIfExists(RecyclerView.ViewHolder item) {
-        if (likeAnimationsMap.containsKey(item)) {
-            likeAnimationsMap.get(item).cancel();
+        if (animatorMap.containsKey(item)) {
+            animatorMap.get(item).cancel();
         }
     }
 
     private void animate(final RecyclerView.ViewHolder holder) {
 
+        AnimatorSet set = getAnimatorSet(holder);
+
+        animatorMap.put(holder, set);
+    }
+
+    @NonNull
+    private AnimatorSet getAnimatorSet(final RecyclerView.ViewHolder holder) {
         int padding = DpUtils.dp2px(holder.itemView.getContext(), PADDING);
 
         ValueAnimator animatorPadding = ValueAnimator.ofInt(0, padding);
@@ -111,17 +120,16 @@ public class RotateItemAnimator extends DefaultItemAnimator {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                likeAnimationsMap.remove(holder);
+                animatorMap.remove(holder);
                 dispatchChangeFinishedIfAllAnimationsEnded(holder);
             }
         });
         set.start();
-
-        likeAnimationsMap.put(holder, set);
+        return set;
     }
 
     private void dispatchChangeFinishedIfAllAnimationsEnded(RecyclerView.ViewHolder holder) {
-        if (likeAnimationsMap.containsKey(holder)) {
+        if (animatorMap.containsKey(holder)) {
             return;
         }
         dispatchAnimationFinished(holder);
@@ -136,7 +144,7 @@ public class RotateItemAnimator extends DefaultItemAnimator {
     @Override
     public void endAnimations() {
         super.endAnimations();
-        for (AnimatorSet animatorSet : likeAnimationsMap.values()) {
+        for (AnimatorSet animatorSet : animatorMap.values()) {
             animatorSet.cancel();
         }
     }
