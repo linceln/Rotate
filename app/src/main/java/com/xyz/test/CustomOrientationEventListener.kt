@@ -13,7 +13,7 @@ class CustomOrientationEventListener(context: Context) : OrientationEventListene
     /**
      * 记录当前所在的角度(0f, 90f, 180f, -90f)
      */
-    private var mCurrentOrientation: Float = 0.toFloat()
+    private var mCurrentOrientation: Float = 0f
 
     /**
      * 列表大小

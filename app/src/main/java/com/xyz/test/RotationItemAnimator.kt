@@ -19,11 +19,11 @@ class RotationItemAnimator : android.support.v7.widget.DefaultItemAnimator() {
         const val TRANSLATION_X = 18
     }
 
-    private var mStartAngle: Float = 0.toFloat()
+    private var mStartAngle: Float = 0f
 
-    private var mEndAngle: Float = 0.toFloat()
+    private var mEndAngle: Float = 0f
 
-    private var mTranslationX: Float = 0.toFloat()
+    private var mTranslationX: Float = 0f
 
     /**
      * 设置旋转动画的角度
