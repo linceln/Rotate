@@ -46,9 +46,9 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
 
         mOrientationEventListener = CustomOrientationEventListener(this)
-        mOrientationEventListener!!.setRecyclerAdapter(adapter)
-        mOrientationEventListener!!.setRecyclerItemAnimator(itemAnimator)
-        mOrientationEventListener!!.setListSize(mList.size)
+        mOrientationEventListener!!.mAdapter = adapter
+        mOrientationEventListener!!.mAnimator = itemAnimator
+        mOrientationEventListener!!.mSize = mList.size
     }
 
     override fun onStart() {

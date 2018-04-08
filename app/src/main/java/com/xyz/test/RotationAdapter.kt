@@ -10,15 +10,11 @@ class RotationAdapter(list: List<String>) : RecyclerView.Adapter<RecyclerView.Vi
 
     private val mList = ArrayList<String>()
 
-    private var mCurrentOrientation: Float = 0.toFloat()
+    var mCurrentOrientation: Float = 0f
 
     init {
         mList.clear()
         mList.addAll(list)
-    }
-
-    fun setCurrentOrientation(orientation: Float) {
-        this.mCurrentOrientation = orientation
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

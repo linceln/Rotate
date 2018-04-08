@@ -1,12 +1,18 @@
 package com.xyz.test
 
 import android.animation.*
-import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.ViewHolder
+import android.support.v7.widget.DefaultItemAnimator
 import android.view.View
 
-class RotationItemAnimator : android.support.v7.widget.DefaultItemAnimator() {
+class RotationItemAnimator : DefaultItemAnimator() {
 
     companion object {
+
+        /**
+         * 动画持续时长
+         */
+        const val DURATION = 200L
 
         /**
          * (dp) 旋转时 item 之间的间距
@@ -45,11 +51,15 @@ class RotationItemAnimator : android.support.v7.widget.DefaultItemAnimator() {
         this.mTranslationX = mTranslationX
     }
 
-    override fun canReuseUpdatedViewHolder(viewHolder: RecyclerView.ViewHolder): Boolean {
+    override fun canReuseUpdatedViewHolder(viewHolder: ViewHolder): Boolean {
         return true
     }
 
-    override fun animateChange(oldHolder: RecyclerView.ViewHolder, newHolder: RecyclerView.ViewHolder, fromX: Int, fromY: Int, toX: Int, toY: Int): Boolean {
+    override fun animateChange(oldHolder: ViewHolder,
+                               newHolder: ViewHolder,
+                               fromX: Int, fromY: Int,
+                               toX: Int, toY: Int): Boolean {
+
         if (oldHolder === newHolder) {
             runAnimatorSet(newHolder.itemView, newHolder)
             return false
@@ -57,7 +67,7 @@ class RotationItemAnimator : android.support.v7.widget.DefaultItemAnimator() {
         return super.animateChange(oldHolder, newHolder, fromX, fromY, toX, toY)
     }
 
-    private fun runAnimatorSet(view: View, viewHolder: RecyclerView.ViewHolder) {
+    private fun runAnimatorSet(view: View, viewHolder: ViewHolder) {
 
         val padding = DpUtils.dp2px(view.context, PADDING.toFloat()).toInt()
 
@@ -79,7 +89,7 @@ class RotationItemAnimator : android.support.v7.widget.DefaultItemAnimator() {
         val animX = ObjectAnimator.ofFloat(view, "translationX", translationXPX)
 
         val set = AnimatorSet()
-        set.duration = 200
+        set.duration = DURATION
         if (mTranslationX != 0f) {
             set.play(animRotate).with(animX).with(animatorPadding)
         } else {
