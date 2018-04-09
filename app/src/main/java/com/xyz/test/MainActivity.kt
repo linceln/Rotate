@@ -45,21 +45,9 @@ class MainActivity : AppCompatActivity() {
         recyclerView.itemAnimator = itemAnimator
         recyclerView.adapter = adapter
 
-        mOrientationEventListener = CustomOrientationEventListener(this)
+        mOrientationEventListener = CustomOrientationEventListener(this, lifecycle)
         mOrientationEventListener!!.mAdapter = adapter
         mOrientationEventListener!!.mAnimator = itemAnimator
         mOrientationEventListener!!.mSize = mList.size
-    }
-
-    override fun onStart() {
-        super.onStart()
-        // 开启旋转监听
-        mOrientationEventListener!!.enable()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        // 关闭旋转监听
-        mOrientationEventListener!!.disable()
     }
 }

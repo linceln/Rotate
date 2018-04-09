@@ -1,9 +1,12 @@
 package com.xyz.test
 
+import android.arch.lifecycle.Lifecycle
+import android.arch.lifecycle.LifecycleObserver
+import android.arch.lifecycle.OnLifecycleEvent
 import android.content.Context
 import android.view.OrientationEventListener
 
-class CustomOrientationEventListener(context: Context) : OrientationEventListener(context) {
+class CustomOrientationEventListener(context: Context, lifecycle: Lifecycle) : OrientationEventListener(context), LifecycleObserver {
 
     var mAdapter: RotationAdapter? = null
 
@@ -18,6 +21,10 @@ class CustomOrientationEventListener(context: Context) : OrientationEventListene
      * 记录当前所在的角度(0f, 90f, 180f, -90f)
      */
     private var mCurrentOrientation: Float = 0f
+
+    init {
+        lifecycle.addObserver(this)
+    }
 
     override fun onOrientationChanged(orientation: Int) {
 
@@ -54,5 +61,15 @@ class CustomOrientationEventListener(context: Context) : OrientationEventListene
             mCurrentOrientation = 90f
             mAdapter!!.mCurrentOrientation = mCurrentOrientation
         }
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    override fun enable() {
+        super.enable()
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    override fun disable() {
+        super.disable()
     }
 }
